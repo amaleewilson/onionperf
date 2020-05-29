@@ -308,6 +308,10 @@ class Measurement(object):
         return self.__start_tgen("server", tgen_port)
 
     def __start_tgen(self, name, tgen_port, socks_port=None, server_urls=None):
+        print("name ", name)
+        print("tgen port ", tgen_port)
+        print("socks_port ", socks_port)
+        print("server_urls ", server_urls)
         logging.info("Starting TGen {0} process on port {1}...".format(name, tgen_port))
         tgen_datadir = "{0}/tgen-{1}".format(self.datadir_path, name)
         if not os.path.exists(tgen_datadir): os.makedirs(tgen_datadir)
@@ -462,7 +466,7 @@ WarnUnsafeSocks 0\nSafeLogging 0\nMaxCircuitDirtiness 60 seconds\nDataDirectory 
         if tgen_logpath is not None and os.path.exists(tgen_logpath):
             with open(tgen_logpath, 'r') as fin:
                 for line in fin:
-                    if re.search("transfer-complete", line) is not None:
+                    if re.search("recvstate=RECV_SUCCESS,error=NONE", line) is not None:
                         count += 1
         return count
 

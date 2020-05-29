@@ -74,7 +74,7 @@ class TorperfModel(GeneratableTGenModel):
         else:
             g.add_node("start", serverport=self.tgen_port, peers=server_str, loglevel="info", heartbeat="1 minute")
         g.add_node("pause", time="5 minutes")
-        g.add_node("transfer5m", type="get", protocol="tcp", size="5 MiB", timeout="270 seconds", stallout="0 seconds")
+        g.add_node("stream_5m", sendsize="1000 bytes", recvsize="5 MiB", timeout="270 seconds", stallout="0 seconds")
 
         g.add_edge("start", "pause")
 
@@ -83,7 +83,7 @@ class TorperfModel(GeneratableTGenModel):
         g.add_edge("pause", "pause")
 
         # these are chosen with weighted probability, change edge 'weight' attributes to adjust probability
-        g.add_edge("pause", "transfer5m")
+        g.add_edge("pause", "stream_5m")
 
         return g
 
@@ -103,10 +103,10 @@ class OneshotModel(GeneratableTGenModel):
             g.add_node("start", serverport=self.tgen_port, peers=server_str, loglevel="info", heartbeat="1 minute", socksproxy=self.socksproxy)
         else:
             g.add_node("start", serverport=self.tgen_port, peers=server_str, loglevel="info", heartbeat="1 minute")
-        g.add_node("transfer5m", type="get", protocol="tcp", size="5 MiB", timeout="15 seconds", stallout="10 seconds")
+        g.add_node("stream_5m", sendsize="1000 bytes", recvsize="5 MiB", timeout="270 seconds", stallout="10 seconds")
 
-        g.add_edge("start", "transfer5m")
-        g.add_edge("transfer5m", "start")
+        g.add_edge("start", "stream_5m")
+        g.add_edge("stream_5m", "start")
 
         return g
 
